@@ -1,0 +1,269 @@
+@baseUrl = http://localhost:3333
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UiLCJ1c2VyUGVybWlzc2lvbnMiOnsibWFuYWdlciI6dHJ1ZSwiZGF0ZSI6dHJ1ZSwic2NoZWR1bGUiOnRydWUsInJlc2NoZWR1bGUiOnRydWUsInJhdG0iOnRydWUsIm1vZGVsIjp0cnVlLCJkaXNjYXJkIjp0cnVlLCJjb25zdWx0Ijp0cnVlfSwic3ViIjoiYjI5NjEzNmYtYTZjZS00MDE2LWJlZGItMmUyODFhMTgzMjVmIiwiaWF0IjoxNzIxODQ4NjM4LCJleHAiOjE3MjQ0NDA2Mzh9.mkv8e7VoT5Pr9OGLcOVwDPBLw_1-i7AZqUPMjZvv1HM
+@email = "johndoe@example.com"
+
+###
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "johndoe@example.com",
+  "password": "password"
+}
+
+###
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "passwordtest"
+}
+
+###
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "email": "renangabrielsilva150@gmail.com",
+  "password": "password"
+}
+
+### Register
+POST {{baseUrl}}/register
+Content-Type: application/json
+
+{
+  "name": "Bruno",
+  "email": "renanplayhentai150@gmail.com",
+  "password": "password"
+}
+
+### Unapproved Users
+GET {{baseUrl}}/unapproved-users
+Authorization: Bearer {{token}}
+
+### Approve User
+POST {{baseUrl}}/approve-user
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": "1d01a2f5-2365-4c69-9f1a-802f0b9753c3",
+  "isUserApproved": false
+}
+
+### Update Permissions
+PUT {{baseUrl}}/update-permissions
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": "2d1d74f0-dc7f-48fd-a173-0f4b87b865f2",
+  "permissions": {
+    "model": false
+  }
+}
+
+### Verify Email
+GET {{baseUrl}}/email/536cc6b0-c3ed-4389-b1c7-82f473ba97aa/verify-email/91c029ffa0f305cf6571b5641b57ccafce5aa06738d8dc742a1df9e52ce0e93e
+
+### Password Recovery
+POST {{baseUrl}}/password-recovery
+Content-Type: application/json
+
+{
+  "email": "renangabrielsilva150@gmail.com"
+}
+
+### Update Password
+PATCH {{baseUrl}}/password/287fe1e2-5ce6-4171-b537-96035272f32d/reset-password/f4fb6af0dd8345e05d60c62d49d4d7e75fa50c23e572bee98a5c8aba74b89b3f
+Content-Type: application/json
+
+{
+  "password": "passwordtest"
+}
+
+### Models
+Get {{baseUrl}}/models
+Authorization: Bearer {{token}}
+
+###
+Get {{baseUrl}}/models/1
+Authorization: Bearer {{token}}
+
+
+###
+POST {{baseUrl}}/models
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "c",
+  "type": "a",
+  "manufacturer": "a",
+  "voltage": "a",
+  "current": "a",
+  "wires": "a",
+  "class": "a",
+  "constant": "a"
+}
+
+###
+PATCH  {{baseUrl}}/models/2
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "b",
+  "type": "q",
+  "manufacturer": "q",
+  "voltage": "q",
+  "current": "q"
+}
+
+###
+DELETE {{baseUrl}}/models/1
+Authorization: Bearer {{token}}
+
+### Dates
+Get {{baseUrl}}/dates
+Authorization: Bearer {{token}}
+
+###
+Get {{baseUrl}}/dates?not-schedule-only=true
+Authorization: Bearer {{token}}
+
+
+###
+POST {{baseUrl}}/dates
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "dates": ["Mon Feb 05 2024","Tue Feb 06 2024","Wed Feb 07 2024","Thu Feb 08 2024","Mon Feb 12 2024","Tue Feb 13 2024","Wed Feb 14 2024","Thu Feb 15 2024", "Thu Mar 15 2024"]
+}
+
+###
+DELETE {{baseUrl}}/dates
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "dates": ["Mon Feb 05 2024","Tue Feb 06 2024","Wed Feb 07 2024","Thu Feb 08 2024","Mon Feb 12 2024", "Thu Mar 15 2024"]
+}
+
+### Meters
+Get {{baseUrl}}/meters?fields=id,number,status
+Authorization: Bearer {{token}}
+
+###
+Get {{baseUrl}}/meters/status/SCHEDULED
+Authorization: Bearer {{token}}
+
+###
+Get {{baseUrl}}/meters/iddamodel
+Authorization: Bearer {{token}}
+
+###
+POST {{baseUrl}}/meters
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "number": "exampleString92",
+  "instalation": "exampleString",
+  "toi": "exampleString",
+  "note": "exampleString",
+  "csd": "exampleString",
+  "customerName": "exampleString",
+  "customerPresent": true,
+}
+
+# isso ta errado
+###
+PATCH  {{baseUrl}}/meters/c9131cfe-14e6-468d-9408-4bebe4fe65d4
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  storageLocation: "exampleString",
+}
+
+###
+DELETE   {{baseUrl}}/meters/596e0f69-5ff2-408e-8123-a7b51f2b5813
+Authorization: Bearer {{token}}
+
+### Schedules
+Get {{baseUrl}}/schedules
+Authorization: Bearer {{token}}
+
+###
+Put {{baseUrl}}/schedules/get-meters-to-test/2
+Authorization: Bearer {{token}}
+
+###
+Get {{baseUrl}}/schedules/2
+Authorization: Bearer {{token}}
+
+###
+POST {{baseUrl}}/schedules
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "meterId": "3d4003f6-b9ad-439d-b8ea-3f796c3e1b41",
+  "dateDate": "Mon Feb 05 2024",
+  "schedule": "08:30"
+}
+
+###
+POST {{baseUrl}}/reschedules
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": 4,
+  "dateDate": "Thu Feb 15 2024",
+  "schedule": "08:30",
+  "reason": "WS"
+}
+
+###
+PUT {{baseUrl}}/schedules/update-status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "meterId": "3d4003f6-b9ad-439d-b8ea-3f796c3e1b41",
+  "meterStatus": "DISCARDED"
+}
+
+### Users
+GET {{baseUrl}}/users
+Authorization: Bearer {{token}}
+
+
+### Ban User
+PUT {{baseUrl}}/users/ae4f71dd-7337-47c1-89c3-020314768408/ban-user
+Authorization: Bearer {{token}}
+
+### Unban User
+PUT {{baseUrl}}/users/ae4f71dd-7337-47c1-89c3-020314768408/unban-user
+Authorization: Bearer {{token}}
+
+### RATM
+GET {{baseUrl}}/ratm
+Authorization: Bearer {{token}}
+
+###
+GET {{baseUrl}}/ratm?meter-id=24ffdd40-5d41-4fd6-b48f-c56e37b93fd7
+Authorization: Bearer {{token}}
+
+###
+GET {{baseUrl}}/ratm/4021119e-74cd-409c-ae3f-34cb88c6cb66
+Authorization: Bearer {{token}}
+
+### Signature
+GET {{baseUrl}}/signatures/ac661c2e-988b-412d-95d2-4870a019a381
+Authorization: Bearer {{token}}

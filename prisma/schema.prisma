@@ -1,0 +1,211 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator markdown {
+  provider = "prisma-markdown"
+  output   = "./../ERD.md"
+  title    = "EDP API"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+enum MeterStatus {
+  SCHEDULED
+  RECEIVED
+  TESTING
+  REHEARSED
+  APPROVED
+  DISCARDED
+}
+
+enum Reason {
+  SH
+  CR
+  WS
+  DM
+}
+
+model Token {
+  userId    String   @unique @default(uuid()) @map("user_id")
+  token     String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("token")
+}
+
+model Permissions {
+  id     String @id @default(uuid())
+  userId String @unique @map("user_id")
+
+  manager    Boolean @default(false)
+  date       Boolean @default(false)
+  schedule   Boolean @default(false)
+  reschedule Boolean @default(false)
+  ratm       Boolean @default(false)
+  model      Boolean @default(false)
+  discard    Boolean @default(false)
+  consult    Boolean @default(false)
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("permissions")
+}
+
+model User {
+  id String @id @default(uuid())
+
+  isUserApproved  Boolean @default(false) @map("is_user_approved")
+  isEmailApproved Boolean @default(false) @map("is_email_approved")
+
+  name     String
+  email    String @unique
+  password String
+
+  isBanned Boolean @default(false) @map("is_banned")
+  isOwer   Boolean @default(false) @map("is_Ower")
+
+  permissions Permissions?
+  Schedule    Schedule[]
+  Signature   Signature[]
+
+  @@map("user")
+}
+
+model Model {
+  id           Int    @id @default(autoincrement())
+  name         String @unique
+  type         String
+  manufacturer String
+  voltage      String
+  current      String
+  wires        String
+  class        String
+  constant     String
+
+  meter Meter[]
+
+  @@map("model")
+}
+
+model Meter {
+  id String @id @default(uuid())
+
+  number          String  @unique
+  instalation     String
+  toi             String
+  note            String
+  csd             String
+  customerName    String  @map("customer_data")
+  customerPresent Boolean @map("customer_present")
+
+  scheduledObservations String? @map("scheduled_observations")
+
+  modelId Int?   @map("model_id")
+  model   Model? @relation(fields: [modelId], references: [id])
+
+  storageLocation   String? @map("storage_location")
+  deliveredBy       String? @map("delivered_by")
+  entryObservations String? @map("entry_observations")
+
+  schedule Schedule[]
+  RATM     RATM[]
+
+  @@map("meter")
+}
+
+model Date {
+  date      String     @unique
+  schedules Json[]
+  schedule  Schedule[]
+
+  @@map("date")
+}
+
+model Schedule {
+  id      Int    @id @default(autoincrement())
+  meterId String @unique @map("meter_id")
+  userId  String @map("user_id")
+
+  dateDate String @map("date_date")
+  schedule String
+
+  status MeterStatus? @default(SCHEDULED)
+
+  reason Reason
+
+  history Json[] @default([])
+
+  updatedAt DateTime @updatedAt
+
+  meter Meter @relation(fields: [meterId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+  date  Date  @relation(fields: [dateDate], references: [date])
+
+  @@map("schedule")
+}
+
+model RATM {
+  id                       String   @id @default(uuid())
+  analyzeOrder             String
+  clientAccompanied        Boolean  @map("client_accompanied")
+  rehearsalVisual          String   @map("rehearsal_visual")
+  dielectric               String
+  sealInvolucro            String   @map("seal_involucro")
+  statusInvolucro          String   @map("status_involucro")
+  seal1                    String
+  statusLacre1             String   @map("status_lacre1")
+  seal2                    String
+  statusLacre2             String   @map("status_lacre2")
+  readingMeter             String   @map("reading_meter")
+  tableTest                String   @map("table_test")
+  cn                       String
+  ci                       String
+  cp                       String
+  cnri                     String
+  cnrc                     String
+  march                    String
+  register                 String
+  phaseInterrupted         String   @map("phase_interrupted")
+  codeIrregularity         String   @map("code_irregularity")
+  descriptionIrregularity  String   @map("description_irregularity")
+  observationsIrregularity String   @map("observations_irregularity")
+  meterBroken              Boolean  @map("meter_broken")
+  displayOff               Boolean  @map("display_off")
+  easeAccess               Boolean  @map("ease_access")
+  coilDamaged              Boolean  @map("coil_damaged")
+  apparentlyOrder          Boolean  @map("apparently_order")
+  failedDielectric         Boolean  @map("failed_dielectric")
+  strangeBody              Boolean  @map("strange_body")
+  burntBorne               Boolean  @map("burnt_borne")
+  photoUrls                String[] @map("photo_urls")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  meter     Meter       @relation(fields: [meterId], references: [id])
+  meterId   String      @map("meter_id")
+  Signature Signature[]
+
+  @@map("ratm")
+}
+
+model Signature {
+  token String @unique
+  type  String
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  ratm   RATM   @relation(fields: [rATMId], references: [id])
+  rATMId String @map("ratm_id")
+
+  @@map("signature")
+}
